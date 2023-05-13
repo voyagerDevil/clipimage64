@@ -4,7 +4,7 @@ import { saveClipboardImageToFile } from "./saveClipboardImageToFile";
 import { readFile, unlink } from "fs";
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "clipimage64" is now active!');
+    console.log("Congratulations, your extension 'clipimage64' is now active!");
 
     let disposable = vscode.commands.registerCommand(
         "clipimage64.pasteImageInBase64",
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
                     try {
                         readFile(imagePathReturnByScript, (err, data) => {
                             if (err) { throw err; }
-                            const imageBase64 = data.toString('base64');
+                            const imageBase64 = data.toString("base64");
                             const pasteImageString = `![](data:image/png;base64,${imageBase64})`;
                             const editor = vscode.window.activeTextEditor;
 
@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
                             // Removing residual image
                             unlink(imagePathReturnByScript, (err)=>{
                                 if (err) {
-                                    console.error('Error removing file:', err);
+                                    console.error("Error removing file:", err);
                                     return;
                                 }
                                 console.log("Residual image removed successfully");
