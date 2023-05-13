@@ -1,11 +1,7 @@
 import path = require("path");
 import { spawn } from "child_process";
 
-export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
-    if (!imagePath) {
-        return;
-    }
-
+export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
     const platform = process.platform;
 
     if (platform === "win32") {
@@ -40,7 +36,7 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
         });
 
         powershell.stdout.on("data", function (data: Buffer) {
-            cb(imagePath, data.toString().trim());
+            cb(data.toString().trim());
         });
     } else if (platform === "darwin") {
         // Mac
@@ -61,7 +57,7 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
         });
 
         appleScript.stdout.on("data", function (data: Buffer) {
-            cb(imagePath, data.toString().trim());
+            cb(data.toString().trim());
         });
     } else {
         // Linux
@@ -86,7 +82,7 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
                 );
                 return;
             }
-            cb(imagePath, result);
+            cb(result);
         });
     }
 };

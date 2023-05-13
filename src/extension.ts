@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
-import { saveClipboardImageToFile } from "./saveClipboardImageToFile";
 import path = require("path");
+import { saveClipboardImageToFile } from "./saveClipboardImageToFile";
+import { readFile, unlink } from "fs";
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "clipimage64" is now active!');
@@ -12,15 +13,42 @@ export function activate(context: vscode.ExtensionContext) {
             //     console.log(`curr: ${curr}`);
             //     // vscode.window.showInformationMessage(curr);
             // });
-            const saveInPath = path.resolve(__dirname, "/temp");
+            const moment = Date.now();
+            const saveInPath = path.join(__dirname, `${moment}.png`);
             saveClipboardImageToFile(
                 saveInPath,
-                (imagePath: string, imagePathReturnByScript: string) => {
-                    console.log(
-                        "🚀 ~ file: extension.ts:19 ~ activate ~ imagePath, imagePathReturnByScript:",
-                        imagePath,
-                        imagePathReturnByScript
-                    );
+                async (imagePathReturnByScript: string) => {
+                    
+                    try {
+                        readFile(imagePathReturnByScript, (err, data) => {
+                            if (err) { throw err; }
+                            const imageBase64 = data.toString('base64');
+                            const pasteImageString = `![](data:image/png;base64,${imageBase64})`;
+                            const editor = vscode.window.activeTextEditor;
+
+                            if (!editor) { return; }
+
+                            editor.edit(edit => {
+                                let current = editor.selection;
+                                if (current.isEmpty) {
+                                    edit.insert(current.start, pasteImageString);
+                                } else {
+                                    edit.replace(current, pasteImageString);
+                                }
+                            });
+
+                            // Removing residual image
+                            unlink(imagePathReturnByScript, (err)=>{
+                                if (err) {
+                                    console.error('Error removing file:', err);
+                                    return;
+                                }
+                                console.log("Residual image removed successfully");
+                            });
+                        });
+                    } catch (error) {
+                        console.error("🚀 ~ file: extension.ts:29 ~ error:", error);
+                    }
                 }
             );
         }
