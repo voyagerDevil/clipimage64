@@ -9,7 +9,7 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
     const platform = process.platform;
 
     if (platform === "win32") {
-        const psScript = path.join(__dirname, "/assets/pc.ps1");
+        const psScript = path.join(__dirname, "../assets/pc.ps1");
         const command = "powershell";
         const powershell = spawn(command, [
             "-noprofile",
@@ -44,7 +44,7 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
         });
     } else if (platform === "darwin") {
         // Mac
-        const scriptPath = path.join(__dirname, "/assets/mac.applescript");
+        const scriptPath = path.join(__dirname, "../assets/mac.applescript");
 
         const appleScript = spawn("osascript", [scriptPath, imagePath]);
 
@@ -65,19 +65,19 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
         });
     } else {
         // Linux
-        const scriptPath = path.join(__dirname, "../../res/linux.sh");
+        const scriptPath = path.join(__dirname, "../assets/linux.sh");
 
-        const ascript = spawn("sh", [scriptPath, imagePath]);
+        const linuxScript = spawn("sh", [scriptPath, imagePath]);
 
-        ascript.on("error", function (e) {
+        linuxScript.on("error", function (e) {
             console.error("🚀 ~ file: saveClipboardImageToFile.ts:76 ~ e:", e);
         });
 
-        ascript.on("exit", function (code, signal) {
+        linuxScript.on("exit", function (code, signal) {
             // console.log('exit',code,signal);
         });
 
-        ascript.stdout.on("data", function (data: Buffer) {
+        linuxScript.stdout.on("data", function (data: Buffer) {
             let result = data.toString().trim();
             if (result === "no xclip") {
                 console.warn(
