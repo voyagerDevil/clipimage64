@@ -5,7 +5,7 @@ export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
     const platform = process.platform;
 
     if (platform === "win32") {
-        const psScript = path.join(__dirname, "../assets/pc.ps1");
+        const psScript = path.join(__dirname, "../assets/winpc.ps1");
         const command = "powershell";
         const powershell = spawn(command, [
             "-noprofile",
