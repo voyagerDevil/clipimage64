@@ -4,12 +4,30 @@
     "description": "Paste clipboard images in base64 into your markdown file",
     "version": "1.0.0",
     "publisher": "Voyager",
+    "author": {
+        "name": "Francis"
+    },
+    "icon": "assets/icon-128x128.png",
+    "galleryBanner": {
+        "color": "C56E05",
+        "theme": "dark"
+    },
     "engines": {
         "vscode": "^1.78.0"
     },
     "categories": [
         "Other"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/voyagerDevil/clipimage64"
+    },
+    "homepage": "https://github.com/voyagerDevil/clipimage64/blob/main/README.md",
+    "license": "SEE LICENSE IN LICENSE.txt",
+    "bugs": {
+        "url": "https://github.com/voyagerDevil/clipimage64/issues",
+        "email": "voyager-dev@outlook.com"
+    },
     "activationEvents": [],
     "main": "./out/extension.js",
     "contributes": {
