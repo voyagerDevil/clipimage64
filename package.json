@@ -3,6 +3,7 @@
     "displayName": "ClipImage64",
     "description": "Paste clipboard images in base64 into your markdown file",
     "version": "1.0.0",
+    "publisher": "Voyager",
     "engines": {
         "vscode": "^1.78.0"
     },
