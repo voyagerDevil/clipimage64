@@ -1,8 +1,8 @@
 {
     "name": "clipimage64",
     "displayName": "ClipImage64",
-    "description": "Paste your images from the clipboard to base64",
-    "version": "0.0.1",
+    "description": "Paste clipboard images in base64 into your markdown file",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.78.0"
     },
@@ -26,7 +26,14 @@
                     "when": "editorLangId == markdown"
                 }
             ]
-        }
+        },
+        "keybindings": [
+            {
+                "command": "clipimage64.pasteImageInBase64",
+                "key": "ctrl+alt+v",
+                "mac": "cmd+alt+v"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
@@ -38,17 +45,17 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
-        "@types/glob": "^8.1.0",
-        "@types/mocha": "^10.0.1",
+        "@types/glob": "8.1.0",
+        "@types/mocha": "10.0.1",
         "@types/node": "16.x",
-        "@types/vscode": "^1.78.0",
-        "@typescript-eslint/eslint-plugin": "^5.59.1",
-        "@typescript-eslint/parser": "^5.59.1",
-        "@vscode/test-electron": "^2.3.0",
-        "eslint": "^8.39.0",
-        "glob": "^8.1.0",
-        "mocha": "^10.2.0",
-        "typescript": "^5.0.4"
+        "@types/vscode": "1.78.0",
+        "@typescript-eslint/eslint-plugin": "5.59.1",
+        "@typescript-eslint/parser": "5.59.1",
+        "@vscode/test-electron": "2.3.0",
+        "eslint": "8.39.0",
+        "glob": "8.1.0",
+        "mocha": "10.2.0",
+        "typescript": "5.0.4"
     },
     "dependencies": {}
 }
