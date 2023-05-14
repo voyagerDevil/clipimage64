@@ -1,15 +1,13 @@
 import path = require("path");
 import { spawn } from "child_process";
+import LOGGER from "./logger";
+import { FileSystemError, window } from "vscode";
 
-export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
-    if (!imagePath) {
-        return;
-    }
-
+export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
     const platform = process.platform;
 
     if (platform === "win32") {
-        const psScript = path.join(__dirname, "/assets/pc.ps1");
+        const psScript = path.join(__dirname, "../assets/winpc.ps1");
         const command = "powershell";
         const powershell = spawn(command, [
             "-noprofile",
@@ -25,68 +23,65 @@ export const saveClipboardImageToFile = async (imagePath: string, cb: any) => {
             imagePath,
         ]);
 
-        powershell.on("error", function (e: any) {
+        powershell.on("error", function (e: FileSystemError) {
             if (e.code === "ENOENT") {
-                console.error(
-                    "🚀 ~ file: saveClipboardImageToFile.ts:31 ~ e:",
-                    e
-                );
+                window.showErrorMessage("No image found in clipboard :(");
+                cb(e);
             } else {
-                console.error(
-                    "🚀 ~ file: saveClipboardImageToFile.ts:31 ~ e:",
-                    e
-                );
+                window.showErrorMessage("Error obtaining the image :(");
+                cb(e);
             }
         });
 
         powershell.stdout.on("data", function (data: Buffer) {
-            cb(imagePath, data.toString().trim());
+            LOGGER.log("Image obtained successfully");
+            cb(undefined, data.toString().trim());
         });
     } else if (platform === "darwin") {
         // Mac
-        const scriptPath = path.join(__dirname, "/assets/mac.applescript");
+        const scriptPath = path.join(__dirname, "../assets/mac.applescript");
 
         const appleScript = spawn("osascript", [scriptPath, imagePath]);
 
         appleScript.on("error", function (e) {
-            console.error("🚀 ~ file: saveClipboardImageToFile.ts:54 ~ e:", e);
+            window.showErrorMessage("Something went wrong :(");
+            cb(e);
         });
 
         appleScript.on("exit", function (code, signal) {
-            console.log(
-                "🚀 ~ file: saveClipboardImageToFile.ts:57 ~ code, signal:",
-                code,
-                signal
-            );
+            window.showErrorMessage("No image found in clipboard");
+            LOGGER.log(`Code: ${code}`);
+            LOGGER.log(`Signal: ${signal}`);
         });
 
         appleScript.stdout.on("data", function (data: Buffer) {
-            cb(imagePath, data.toString().trim());
+            cb(undefined, data.toString().trim());
         });
     } else {
         // Linux
-        const scriptPath = path.join(__dirname, "../../res/linux.sh");
+        const scriptPath = path.join(__dirname, "../assets/linux.sh");
 
-        const ascript = spawn("sh", [scriptPath, imagePath]);
+        const linuxScript = spawn("sh", [scriptPath, imagePath]);
 
-        ascript.on("error", function (e) {
-            console.error("🚀 ~ file: saveClipboardImageToFile.ts:76 ~ e:", e);
+        linuxScript.on("error", function (e) {
+            window.showErrorMessage("Something went wrong :(");
+            cb(e);
         });
 
-        ascript.on("exit", function (code, signal) {
-            // console.log('exit',code,signal);
+        linuxScript.on("exit", function (code, signal) {
+            window.showErrorMessage("No image found in clipboard");
+            LOGGER.log(`Code: ${code}`);
+            LOGGER.log(`Signal: ${signal}`);
         });
 
-        ascript.stdout.on("data", function (data: Buffer) {
+        linuxScript.stdout.on("data", function (data: Buffer) {
             let result = data.toString().trim();
             if (result === "no xclip") {
-                console.warn(
-                    "🚀 ~ file: saveClipboardImageToFile.ts:84 ~ result:",
-                    result
-                );
-                return;
+                LOGGER.warn("xclip not installed");
+                window.showWarningMessage("xclip not installed");
+                cb(new Error("xclip not installed"));
             }
-            cb(imagePath, result);
+            cb(undefined, result);
         });
     }
 };
