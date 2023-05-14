@@ -25,10 +25,10 @@ export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
 
         powershell.on("error", function (e: FileSystemError) {
             if (e.code === "ENOENT") {
-                window.showErrorMessage("No image found in clipboard");
+                window.showErrorMessage("No image found in clipboard 😿");
                 cb(e);
             } else {
-                window.showErrorMessage("Error obtaining the image");
+                window.showErrorMessage("Error obtaining the image 😿");
                 cb(e);
             }
         });
@@ -44,11 +44,12 @@ export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
         const appleScript = spawn("osascript", [scriptPath, imagePath]);
 
         appleScript.on("error", function (e) {
-            window.showErrorMessage("No image found in clipboard");
+            window.showErrorMessage("Something went wrong 😿");
             cb(e);
         });
 
         appleScript.on("exit", function (code, signal) {
+            window.showErrorMessage("No image found in clipboard");
             LOGGER.log(`Code: ${code}`);
             LOGGER.log(`Signal: ${signal}`);
         });
@@ -63,11 +64,12 @@ export const saveClipboardImageToFile = (imagePath: string, cb: any) => {
         const linuxScript = spawn("sh", [scriptPath, imagePath]);
 
         linuxScript.on("error", function (e) {
-            window.showErrorMessage("No image found in clipboard");
+            window.showErrorMessage("Something went wrong 😿");
             cb(e);
         });
 
         linuxScript.on("exit", function (code, signal) {
+            window.showErrorMessage("No image found in clipboard");
             LOGGER.log(`Code: ${code}`);
             LOGGER.log(`Signal: ${signal}`);
         });

@@ -23,6 +23,12 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 try {
+                    if (imagePathReturnByScript === "no image") {
+                        vscode.window.showErrorMessage(
+                            "No image found in the clipboard."
+                        );
+                        throw new Error("No image found in the clipboard.");
+                    }
                     readFile(imagePathReturnByScript, (err, data) => {
                         if (err) {
                             throw err;
