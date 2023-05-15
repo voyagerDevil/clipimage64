@@ -35,7 +35,8 @@ export function activate(context: vscode.ExtensionContext) {
                         }
 
                         const imageBase64 = data.toString("base64");
-                        const pasteImageString = `![](data:image/png;base64,${imageBase64})`;
+                        const referenceImage = `![Alternative Text][${moment}]`;
+                        const pasteImageString = `[${moment}]:data:image/png;base64,${imageBase64}`;
                         const editor = vscode.window.activeTextEditor;
 
                         if (!editor) {
@@ -43,13 +44,27 @@ export function activate(context: vscode.ExtensionContext) {
                             return;
                         }
 
+                        const document = editor.document;
+                        const lastLine = document.lineAt(
+                            document.lineCount - 1
+                        );
+
+                        let currentPosition = editor.selection;
+                        const endPosition = lastLine.range.end;
+
                         editor.edit((edit) => {
-                            let current = editor.selection;
-                            if (current.isEmpty) {
-                                edit.insert(current.start, pasteImageString);
+                            // Paste reference image in the current line
+                            if (currentPosition.isEmpty) {
+                                edit.insert(
+                                    currentPosition.start,
+                                    referenceImage
+                                );
                             } else {
-                                edit.replace(current, pasteImageString);
+                                edit.replace(currentPosition, referenceImage);
                             }
+
+                            // The Image text will be paste at the end of the file
+                            edit.insert(endPosition, "\n" + pasteImageString);
                         });
 
                         // Removing residual image
