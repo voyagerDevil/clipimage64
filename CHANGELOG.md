@@ -4,6 +4,10 @@ All notable changes to the "clipimage64" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [1.0.5]
 
-- Initial release
+-   New feature: Now the image will be paste at the end of the file
+
+## [1.0.0]
+
+-   Release version
