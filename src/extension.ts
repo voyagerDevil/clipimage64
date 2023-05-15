@@ -35,7 +35,8 @@ export function activate(context: vscode.ExtensionContext) {
                         }
 
                         const imageBase64 = data.toString("base64");
-                        const pasteImageString = `![](data:image/png;base64,${imageBase64})`;
+                        const referenceImage = `![Alternative Text][${moment}]`;
+                        const pasteImageString = `[${moment}]:data:image/png;base64,${imageBase64}`;
                         const editor = vscode.window.activeTextEditor;
 
                         if (!editor) {
@@ -43,14 +44,55 @@ export function activate(context: vscode.ExtensionContext) {
                             return;
                         }
 
-                        editor.edit((edit) => {
-                            let current = editor.selection;
-                            if (current.isEmpty) {
-                                edit.insert(current.start, pasteImageString);
-                            } else {
-                                edit.replace(current, pasteImageString);
-                            }
-                        });
+                        const document = editor.document;
+                        const lastLine = document.lineAt(
+                            document.lineCount - 1
+                        );
+
+                        let currentPosition = editor.selection;
+                        const endPosition = lastLine.range.end;
+
+                        editor
+                            .edit((edit) => {
+                                // Paste reference image in the current line
+                                if (currentPosition.isEmpty) {
+                                    edit.insert(
+                                        currentPosition.start,
+                                        referenceImage
+                                    );
+                                } else {
+                                    edit.replace(
+                                        currentPosition,
+                                        referenceImage
+                                    );
+                                }
+
+                                // The Image text will be paste at the end of the file
+                                edit.insert(
+                                    endPosition,
+                                    "\n" + "\n" + pasteImageString
+                                );
+                            })
+                            .then((success) => {
+                                if (success) {
+                                    const insertedRange = new vscode.Range(
+                                        currentPosition.start.translate({
+                                            characterDelta: 2,
+                                        }),
+                                        currentPosition.start.translate({
+                                            characterDelta: 18,
+                                        })
+                                    );
+                                    editor.selection = new vscode.Selection(
+                                        insertedRange.start,
+                                        insertedRange.end
+                                    );
+                                } else {
+                                    vscode.window.showErrorMessage(
+                                        "Failed to insert text at the end of the file."
+                                    );
+                                }
+                            });
 
                         // Removing residual image
                         unlink(imagePathReturnByScript, (err) => {
