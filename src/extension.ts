@@ -52,20 +52,47 @@ export function activate(context: vscode.ExtensionContext) {
                         let currentPosition = editor.selection;
                         const endPosition = lastLine.range.end;
 
-                        editor.edit((edit) => {
-                            // Paste reference image in the current line
-                            if (currentPosition.isEmpty) {
-                                edit.insert(
-                                    currentPosition.start,
-                                    referenceImage
-                                );
-                            } else {
-                                edit.replace(currentPosition, referenceImage);
-                            }
+                        editor
+                            .edit((edit) => {
+                                // Paste reference image in the current line
+                                if (currentPosition.isEmpty) {
+                                    edit.insert(
+                                        currentPosition.start,
+                                        referenceImage
+                                    );
+                                } else {
+                                    edit.replace(
+                                        currentPosition,
+                                        referenceImage
+                                    );
+                                }
 
-                            // The Image text will be paste at the end of the file
-                            edit.insert(endPosition, "\n" + pasteImageString);
-                        });
+                                // The Image text will be paste at the end of the file
+                                edit.insert(
+                                    endPosition,
+                                    "\n" + "\n" + pasteImageString
+                                );
+                            })
+                            .then((success) => {
+                                if (success) {
+                                    const insertedRange = new vscode.Range(
+                                        currentPosition.start.translate({
+                                            characterDelta: 2,
+                                        }),
+                                        currentPosition.start.translate({
+                                            characterDelta: 18,
+                                        })
+                                    );
+                                    editor.selection = new vscode.Selection(
+                                        insertedRange.start,
+                                        insertedRange.end
+                                    );
+                                } else {
+                                    vscode.window.showErrorMessage(
+                                        "Failed to insert text at the end of the file."
+                                    );
+                                }
+                            });
 
                         // Removing residual image
                         unlink(imagePathReturnByScript, (err) => {
