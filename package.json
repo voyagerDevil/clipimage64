@@ -2,7 +2,7 @@
     "name": "clipimage64",
     "displayName": "ClipImage64",
     "description": "Paste clipboard images in base64 into your markdown file",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "publisher": "Voyager",
     "author": {
         "name": "Francis"
