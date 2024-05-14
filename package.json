@@ -2,7 +2,7 @@
     "name": "clipimage64",
     "displayName": "ClipImage64",
     "description": "Paste clipboard images in base64 into your markdown file",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "publisher": "Voyager",
     "author": {
         "name": "Francis"
@@ -35,6 +35,10 @@
             {
                 "command": "clipimage64.pasteImageInBase64",
                 "title": "Paste image in base64"
+            },
+            {
+                "command": "clipimage64.removeNonUsedImages",
+                "title": "Remove unused images"
             }
         ],
         "menus": {
@@ -42,6 +46,11 @@
                 {
                     "command": "clipimage64.pasteImageInBase64",
                     "group": "9_cutcopypaste",
+                    "when": "editorLangId == markdown"
+                },
+                {
+                    "command": "clipimage64.removeNonUsedImages",
+                    "group": "1_modification",
                     "when": "editorLangId == markdown"
                 }
             ]
@@ -51,6 +60,11 @@
                 "command": "clipimage64.pasteImageInBase64",
                 "key": "ctrl+alt+v",
                 "mac": "cmd+alt+v"
+            },
+            {
+                "command": "clipimage64.removeNonUsedImages",
+                "key": "ctrl+shift+d",
+                "mac": "cmd+shift+d"
             }
         ]
     },
