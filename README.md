@@ -15,3 +15,10 @@ Paste clipboard images in base64 into your markdown file.
 
 1. Paste base64 images from clipboard `Ctrl+Alt+V` (`Cmd+Alt+V` on Mac)
 2. __|New|__ Delete images that are not in use `Ctrl+Shift+D` (`Cmd+Shift+D` on Mac)
+
+## Releases
+
+- v1.0.7: Fix running on Linux
+- v1.0.6: Add a command to remove unused images (`Ctrl+Shift+D`, or `Cmd+Shift+D` on Mac)
+- v1.0.0: Add the default shortcut for pasting clipboard images as base64 (`Ctrl+Alt+V`, or `Cmd+Alt+V` on Mac)
+- v0.0.1: Initial extension development release
